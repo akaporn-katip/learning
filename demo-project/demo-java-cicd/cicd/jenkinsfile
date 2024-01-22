@@ -1,0 +1,55 @@
+def lastHash
+
+pipeline {
+  agent any
+  environment {
+    BRANCH = "${scm.branches[0].name}"
+  }
+
+  stages {
+    stage('pull project') {
+        steps {
+            git credentialsId: 'akaporn-rvp-gitea', branch: "$BRANCH", url: 'http://13.76.38.217:3000/dhip-laos-team/demo-project.git'
+        }
+    }
+
+    stage('get all branches') {
+        steps {
+            script {
+                sh 'git branch --all'
+            }
+        }
+    }
+
+    stage('get last tag and last hash and checkout') {
+        steps {
+            script {
+                lastHash = sh(returnStdout: true, script: 'git rev-parse HEAD | cut -c1-8').trim()
+            }
+        }
+    }
+
+    stage('configuration') {
+        steps {
+            sh ''
+        }
+    }
+
+    stage('build-deploy') {
+        steps {
+            script {
+                sh 'cd demo && mvn -s ./settings.xml deploy'
+            }
+        }
+    }
+
+    stage('deploy-payara5') {
+        steps {
+            script {
+                sh 'cd demo/cicd/deploy && ansible-playbook -i hosts deploy-playbook.yml'
+            }
+        }
+    } 
+    
+  }
+}

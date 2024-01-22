@@ -1,0 +1,44 @@
+- hosts: utils
+  vars: 
+      nexus_host: "http://13.76.38.217:9091"
+      group_id: "com.katipwork"
+      extension: "war"
+      repository: "maven-snapshots"
+      
+  tasks:
+    - name: Get Download Artifact URL
+      ansible.builtin.shell: |
+        curl -X GET '{{ nexus_host }}/service/rest/v1/search?repository={{ repository }}&group={{ group_id }}' | jq -r '.items[-1].assets[] | select(.maven2.extension == "{{ extension }}").downloadUrl'
+      register: downloadUrl
+      delegate_to: localhost
+    
+    - name: Print downloadUrl
+      debug:
+        msg: "{{downloadUrl.stdout}}"
+
+    - name: Get Filename
+      ansible.builtin.shell: |
+        echo "{{downloadUrl.stdout}}" | cut -d'/' -f10
+      register: filename
+      delegate_to: localhost
+
+    - name: Print filename
+      debug:
+        msg: "{{filename.stdout}}"
+
+    - name: Download artifact
+      win_shell: | 
+        $url="{{downloadUrl.stdout}}"
+        $target="C:\temp\{{filename.stdout}}"
+        Invoke-WebRequest -Uri $url -OutFile $target
+
+    - name: Undeploy Application
+      win_shell: |
+        asadmin undeploy "demo-application"
+      ignore_errors: true
+
+    - name: Deploy Application
+      win_shell: |
+        $warfile="C:\temp\{{filename.stdout}}"
+        asadmin deploy --virtualservers server --contextroot "/demo" --name "demo-application" $warfile
+
