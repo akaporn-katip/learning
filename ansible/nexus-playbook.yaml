@@ -1,0 +1,25 @@
+- name: Install Nexus Repository
+  hosts: utilities
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Upload nexus repository binary
+     ansible.builtin.copy:
+       src: ./nexus-3.63.0-01-unix.tar.gz
+       dest: ./nexus-3.63.0-01-unix.tar.gz
+
+   - name: extract nexus 
+     ansible.builtin.shell: |
+       tar -xvzf ./nexus-3.63.0-01-unix.tar.gz
+
+   - name: start nexus as a service
+     ansible.builtin.shell: |
+       cd ./nexus-3.63.0-01
+       echo 'run_as_user="rvproot"' > bin/nexus.rc
+      
+       INSTALL4J_JAVA_HOME=/usr/lib/jvm/temurin-8-jdk-amd64
+       sed -i 's/application-port=8081/application-port=9091/' ./etc/nexus-default.properties
+
+       cd ./bin
+       ./nexus start

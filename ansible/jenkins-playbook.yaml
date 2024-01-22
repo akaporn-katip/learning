@@ -1,0 +1,34 @@
+---
+- name: Install JAVA
+  hosts: utilities
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: add apt source
+      block:
+        - name: get key
+          ansible.builtin.get_url:
+            url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+            dest: /usr/share/keyrings/jenkins-keyring.asc
+          become: true
+
+        - name: add apt source
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
+          become: true
+
+    - name: Install Jenkins
+      ansible.builtin.apt:
+        name: jenkins
+        state: present
+      become: true
+
+    - name: secrets admin
+      ansible.builtin.command: "cat /var/lib/jenkins/secrets/initialAdminPassword"
+      register: secret
+      become: true
+
+    - name: display secret
+      ansible.builtin.debug:
+        msg: "{{ secret.stdout }}"

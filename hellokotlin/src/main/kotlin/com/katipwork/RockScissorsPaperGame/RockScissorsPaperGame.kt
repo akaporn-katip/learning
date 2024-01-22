@@ -1,4 +1,4 @@
-package com.katipwork.RockScissorsPaperGame.com.katipwork.RockScissorsPaperGame
+package com.katipwork.rockscissorspapergame
 fun runGame() {
     for(i in 1..3) {
         val computer = getGameChoice()

@@ -1,0 +1,10 @@
+- name: Install Gitea
+  hosts: utilities
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Install Gitea
+     community.general.snap:
+       name: gitea
+     become: true

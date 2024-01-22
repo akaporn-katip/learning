@@ -1,0 +1,18 @@
+---
+- name: Install Necessary Dependency
+  hosts: utilities
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: Install Jq
+      ansible.builtin.apt:
+        name: jq
+        state: present
+      become: true
+
+    - name: Install maven
+      ansible.builtin.apt:
+        name: maven
+        state: present
+      become: true
