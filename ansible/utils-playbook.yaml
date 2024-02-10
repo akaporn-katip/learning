@@ -11,8 +11,14 @@
         state: present
       become: true
 
-    - name: Install maven
+    - name: Install wget
       ansible.builtin.apt:
-        name: maven
+        name: wget
+        state: present
+      become: true
+
+    - name: Install musl
+      ansible.builtin.apt:
+        name: musl
         state: present
       become: true

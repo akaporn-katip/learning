@@ -1,0 +1,39 @@
+---
+- name: Install Grafana
+  hosts: utilities
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: add apt source
+      block:
+        - name: get gpg key
+          ansible.builtin.shell: |
+            sudo wget -qO - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg
+          become: true
+
+        - name: add apt source
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+          become: true
+
+    - name: Install Grafana
+      ansible.builtin.apt:
+        name: grafana 
+        state: present
+      become: true
+
+    - name: Grafana Configuration
+      ansible.builtin.copy:
+        src: ./grafana.ini
+        dest: /etc/grafana/grafana.ini
+        owner: root
+        group: root
+        mode: '640'
+      become: true
+
+    - name: Start Grafana Service
+      ansible.builtin.systemd_service:
+        name: "grafana-server" 
+        state: "restarted"
+      become: true

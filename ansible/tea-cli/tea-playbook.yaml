@@ -1,0 +1,19 @@
+- name: Install Tea-cli
+  hosts: utilities
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: copy tea
+     ansible.builtin.copy:
+       src: ./tea
+       dest: /usr/bin/
+       owner: root
+       group: root
+       mode: '755'
+     become: true
+
+
+   - name: tea login
+     ansible.builtin.shell: |
+       tea login add --name akaporn --url http://gitea.local.katipwork.com --token a7ff1755d78b096e1028139f1491c206ac7f6b8b
