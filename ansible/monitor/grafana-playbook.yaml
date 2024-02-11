@@ -29,7 +29,7 @@
         dest: /etc/grafana/grafana.ini
         owner: root
         group: root
-        mode: '640'
+        mode: '755'
       become: true
 
     - name: Start Grafana Service
