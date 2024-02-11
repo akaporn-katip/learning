@@ -1,0 +1,39 @@
+---
+- name: Install Loki
+  hosts: utilities
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: add apt source
+      block:
+        - name: get gpg key
+          ansible.builtin.shell: |
+            sudo wget -qO - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg
+          become: true
+
+        - name: add apt source
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+          become: true
+
+    - name: Install Loki
+      ansible.builtin.apt:
+        name: loki
+        state: present
+      become: true
+
+    - name: Loki Configuration
+      ansible.builtin.copy:
+        src: ./loki-config.yml
+        dest: /etc/loki/config.yml
+        owner: root
+        group: root
+        mode: '755'
+      become: true
+
+    - name: Start Loki Service
+      ansible.builtin.systemd_service:
+        name: "loki" 
+        state: "restarted"
+      become: true
