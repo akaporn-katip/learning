@@ -1,0 +1,74 @@
+---
+- name: Install Docker
+  hosts: utilities
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: add docker repository
+      block:
+        - name: get gpg key
+          ansible.builtin.get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/keyrings/docker.asc
+            mode: 'a+r'
+          become: true
+
+        - name: get architecture
+          ansible.builtin.shell: |
+            dpkg --print-architecture
+          register: architecture
+
+        - name: print architecture
+          ansible.builtin.debug:
+            msg: "{{ architecture.stdout }}"
+
+        - name: add docker repository
+          ansible.builtin.apt_repository:
+            repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+          become: true
+
+    - name: Install Docker Engine
+      block:
+        - name: docker-ce
+          ansible.builtin.apt:
+            name: docker-ce
+          become: true
+
+        - name: docker-ce-cli
+          ansible.builtin.apt:
+            name: docker-ce-cli
+          become: true
+
+        - name: containerd.io
+          ansible.builtin.apt:
+            name: containerd.io
+          become: true
+
+        - name: docker-buildx-plugin
+          ansible.builtin.apt:
+            name: docker-buildx-plugin
+          become: true
+
+        - name: docker-compose-plugin
+          ansible.builtin.apt:
+            name: docker-compose-plugin
+          become: true
+
+    - name: test docker
+      block:
+        - name: run hello-world
+          ansible.builtin.shell: |
+            sudo docker run hello-world
+          register: hello
+          become: true
+        
+        - ansible.builtin.debug:
+            msg: "{{ hello.stdout }}"
+
+    - name: adding existing user "{{ ansible_user }} to group docker"
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+      become: true
