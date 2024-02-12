@@ -1,19 +1,30 @@
 def lastHash
-
+def releaseTag
+def giteaHost = 'http://gitea.local.katipwork.com/'
+def repo = 'demo-dhiplaos/demo-project'
+def asset
 pipeline {
-  agent any
+  agent none
+
+  tools {
+    jdk '8.0.402-tem'
+    maven 'maven3'
+  }
+
   environment {
     BRANCH = "${scm.branches[0].name}"
   }
 
   stages {
     stage('pull project') {
+        agent any
         steps {
-            git credentialsId: 'akaporn-rvp-gitea', branch: "$BRANCH", url: 'http://13.76.38.217:3000/dhip-laos-team/demo-project.git'
+            git credentialsId: 'akaporn-personal-access-token', branch: "$BRANCH", url: 'http://gitea.local.katipwork.com/demo-dhiplaos/demo-project'
         }
     }
 
     stage('get all branches') {
+        agent any
         steps {
             script {
                 sh 'git branch --all'
@@ -22,6 +33,7 @@ pipeline {
     }
 
     stage('get last tag and last hash and checkout') {
+        agent any
         steps {
             script {
                 lastHash = sh(returnStdout: true, script: 'git rev-parse HEAD | cut -c1-8').trim()
@@ -29,27 +41,54 @@ pipeline {
         }
     }
 
-    stage('configuration') {
-        steps {
-            sh ''
-        }
-    }
 
-    stage('build-deploy') {
+    stage('build') {
+        agent any
         steps {
             script {
-                sh 'cd demo && mvn -s ./settings.xml deploy'
+                sh 'mvn clean install'
             }
         }
     }
 
-    stage('deploy-payara5') {
+
+    stage('release') {
+        agent any
         steps {
             script {
-                sh 'cd demo/cicd/deploy && ansible-playbook -i hosts deploy-playbook.yml'
+                def snapshot = sh(returnStdout: true, script: 'realpath ./target/*.war').trim()
+                releaseTag = "release-${lastHash}"
+
+                def warfile = "dhiplaos-webapp-${releaseTag}.war"
+                sh "cp ${snapshot} ./${warfile}"
+                sh "tea releases create --repo '$repo' --title '$releaseTag' --tag '$releaseTag' -a './$warfile' || true"
+
+                asset = sh(returnStdout: true, script: "curl -X GET '$giteaHost/api/v1/repos/$repo/releases/tags/$releaseTag' -H \'accept: application/json\' | jq -r \'.assets[0].browser_download_url\'")
+                echo "$asset"
             }
         }
-    } 
+    }
+
+    stage('deploy') {
+        agent {
+            label 'windows' 
+        }
+
+        steps {
+            script {
+                dir('C:\\apps\\') {
+                    def output = "${releaseTag}.war";
+                    bat("curl.exe --silent --output ${output} ${asset}")
+
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        bat("asadmin undeploy demoapp")
+                    }
+                    
+                    bat("asadmin deploy --name demoapp --virtualservers server --contextroot / ${output}")
+                }                
+            }
+        }
+    }
     
   }
 }
