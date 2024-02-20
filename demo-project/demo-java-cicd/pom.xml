@@ -17,6 +17,27 @@
     </properties>
     
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.7.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.8</version>
+        </dependency>
+
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -141,23 +162,6 @@
         </dependency>
     </dependencies>
     
-    <!-- <repositories>
-        <repository>
-            <id>nexus-repository</id>
-            <name>nexus-repository</name>
-            <url>
-                http://13.76.38.217:9091/repository/maven-central/
-            </url>
-        </repository>
-    </repositories> -->
-    
-    <!-- <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-reopsitory-snapshot</id>
-            <url>http://13.76.38.217:9091/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement> -->
-    
     <build>
         <plugins>
             <plugin>
@@ -219,12 +223,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- <configuration>
-                    <serverId>nexus-reopsitory-snapshot</serverId>
-                    <nexusUrl>http://13.76.38.217:9091/</nexusUrl>
-                    <repository>maven-releases</repository>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                </configuration> -->
             </plugin>
         </plugins>
     </build>

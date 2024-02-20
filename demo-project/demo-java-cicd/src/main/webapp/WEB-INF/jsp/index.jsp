@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+<html lang="th">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Welcome to Spring Web MVC project</title>
@@ -10,8 +10,8 @@
 
     <body>
         <h1>DEMO APPLICATION</h1>
-        <p><i>NETBEAN</i></p>
-        <p><i>CI/CD is Implemented</i></p>
-        <p><i>AKAPORN KATIP</i></p>
+        <p>NETBEAN</p>
+        <p>CI/CD is Implemented</p>
+        <p>AKAPORN KATIP</p>
     </body>
 </html>

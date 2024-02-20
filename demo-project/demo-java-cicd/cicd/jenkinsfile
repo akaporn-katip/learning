@@ -1,25 +1,25 @@
 def lastHash
 def releaseTag
 def giteaHost = 'http://gitea.local.katipwork.com/'
-def repo = 'demo-dhiplaos/demo-project'
+def repo = 'demo-organization/demo-project'
 def asset
 pipeline {
   agent none
 
-  tools {
-    jdk '8.0.402-tem'
-    maven 'maven3'
-  }
-
   environment {
     BRANCH = "${scm.branches[0].name}"
   }
+  
+  tools {
+    jdk '8.0.402-tem'
+    maven 'maven3'
+  } 
 
   stages {
     stage('pull project') {
         agent any
         steps {
-            git credentialsId: 'akaporn-personal-access-token', branch: "$BRANCH", url: 'http://gitea.local.katipwork.com/demo-dhiplaos/demo-project'
+            git credentialsId: 'gitea-admin-jenkins', branch: "$BRANCH", url: 'http://gitea.local.katipwork.com/demo-organization/demo-project'
         }
     }
 
@@ -42,8 +42,22 @@ pipeline {
     }
 
 
+    stage('sonarqube analysis') {
+      agent any
+
+      steps {    
+        withSonarQubeEnv(credentialsId: 'sonarqube_secret_token', installationName: 'sonar.local.katipwork.com') {
+            sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar \
+                -Dsonar.projectKey=demo-project \
+                -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                -Dsonar.login=${env.SONAR_AUTH_TOKEN}"
+        }
+      }
+    }
+
     stage('build') {
         agent any
+        
         steps {
             script {
                 sh 'mvn clean install'
