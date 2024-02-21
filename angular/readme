@@ -1,0 +1,4 @@
+## Install AngularCLI
+```
+npm i -g @angular/cli
+```
