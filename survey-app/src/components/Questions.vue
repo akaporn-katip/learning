@@ -115,24 +115,6 @@ const questions = ref([
       },
     ],
   },
-  {
-    question: "คำถาม 7",
-    answer: 0,
-    choices: [
-      {
-        choice: "การทำงาน",
-        score: 10,
-      },
-      {
-        choice: "เที่ยวต่างประเทศ",
-        score: 20,
-      },
-      {
-        choice: "ใช้ชีวิตประจำวัน",
-        score: 30,
-      },
-    ],
-  },
 ]);
 
 const currentQuestion = computed(() => {
