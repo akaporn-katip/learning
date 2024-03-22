@@ -3,7 +3,7 @@ import { sleep } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '5m', target: 800 }
+    { duration: '10s', target: 10 }
   ]
   // A number specifying the number of VUs to run concurrently.
   //vus: 40,
