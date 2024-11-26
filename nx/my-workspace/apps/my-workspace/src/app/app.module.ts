@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { MyNestLibModule } from '@my-workspace/my-nest-lib';
 
 @Module({
-  imports: [],
+  imports: [MyNestLibModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,0 +1,20 @@
+{
+  "name": "x-libs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/x-libs/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/x-libs",
+        "tsConfig": "libs/x-libs/tsconfig.lib.json",
+        "packageJson": "libs/x-libs/package.json",
+        "main": "libs/x-libs/src/index.ts",
+        "assets": ["libs/x-libs/*.md"]
+      }
+    }
+  }
+}
