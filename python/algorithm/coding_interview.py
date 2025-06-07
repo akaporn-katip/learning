@@ -2,17 +2,17 @@ from binary_tree import BinaryTree
 
 
 # Time Complexity = O(n)
-def two_sum(nums: list[int], target  : int) -> list[int]:
-    memory  = {}
+def two_sum(nums: list[int], target: int) -> list[int]:
+    memory = {}
     for i, num in enumerate(nums):
         complement = target - num
         if complement in memory:
             return [memory[complement], i]
-        else :
+        else:
             memory[num] = i
 
 
-def valid_parentheses(s: str) -> bool :
+def valid_parentheses(s: str) -> bool:
     stack: list[str] = []
     mapping = {')': '(', '}': '{', ']': '['}
 
@@ -21,23 +21,22 @@ def valid_parentheses(s: str) -> bool :
             top = stack.pop() if stack else '#'
             if top != mapping[char]:
                 return False
-      
+
         else:
             stack.append(char)
 
     return not stack
 
 
-def longest_repeat_substring(s: str) -> int :
+def longest_repeat_substring(s: str) -> int:
     left = 0
-    right = 0
     max_len = 0
     seen_chars = {}
-    
+
     for i, char in enumerate(s):
         right = i
         if char in seen_chars:
-            rm =  seen_chars[char] + 1 
+            rm = seen_chars[char] + 1
             left = left if rm < left else rm
         seen_chars[char] = i
         current_len = right - left + 1
@@ -49,8 +48,8 @@ def longest_repeat_substring(s: str) -> int :
 def is_palindrome(s: str) -> bool:
     s = [c for c in s.lower() if c.isalnum()]
     left = 0
-    right =  len(s) - 1
-    while(left < right):
+    right = len(s) - 1
+    while (left < right):
         if s[left] != s[right]:
             return False
         left += 1
@@ -80,6 +79,35 @@ def invert_tree(root: BinaryTree) -> BinaryTree:
     invert_tree(root.right)
     return root
 
-def three_sum(nums: list[int]) -> list[int]:
-    
+
+def three_sum(nums: list[int]) -> list[list[int]]:
+    nums.sort()
+    rs = []
     target = 0
+    n = len(nums)
+
+    for i in range(n - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+
+        left = i + 1
+        right = n - 1
+
+        while left < right:
+            current_sum = nums[i] + nums[left] + nums[right]
+            if current_sum < target:
+                left += 1
+            elif current_sum > target:
+                right -= 1
+            else:
+                tri = [nums[i], nums[left], nums[right]]
+                rs.append(tri)
+                while left < right and nums[left] == tri[1]:
+                    left += 1
+                while left < right and nums[right] == tri[2]:
+                    right -= 1
+    return rs
+
+
+
+

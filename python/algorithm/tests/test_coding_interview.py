@@ -1,4 +1,3 @@
-
 import unittest
 
 from binary_tree import build_tree, to_values
@@ -45,7 +44,8 @@ class TestCodingInterview(unittest.TestCase):
         self.assertEqual(is_palindrome('aba'), True)
 
     def test_group_angrams(self):
-        self.assertListEqual(group_angrams(["eat", "tea", "tan", "ate", "nat", "bat"]), [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']])
+        self.assertListEqual(group_angrams(["eat", "tea", "tan", "ate", "nat", "bat"]),
+                             [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']])
         self.assertListEqual(group_angrams([""]), [[""]])
         self.assertListEqual(group_angrams(["a"]), [["a"]])
 
@@ -57,7 +57,6 @@ class TestCodingInterview(unittest.TestCase):
         root_2 = build_tree([])
         expected_output_2 = build_tree([])
         self.assertListEqual(to_values(invert_tree(root=root_2)), to_values(expected_output_2))
-
 
         root_3 = build_tree([1])
         expected_output_3 = build_tree([1])
@@ -74,7 +73,6 @@ class TestCodingInterview(unittest.TestCase):
         root_6 = build_tree([1, 2, 3])
         expect_output_6 = build_tree([1, 3, 2])
         self.assertEqual(to_values(invert_tree(root=root_6)), to_values(expect_output_6))
-
 
     def test_three_sum(self):
         """
@@ -104,8 +102,15 @@ class TestCodingInterview(unittest.TestCase):
 
         3 <= nums.length <= 3000
         -10^5 <= nums[i] <= 10^5
+
+
+        sort = [-4, -1 -1, 0, 1 , 2]
         """
-        print(three_sum([-1, 0, 1, 2, -1, -4]))
+        self.assertListEqual(three_sum([-1, 0, 1, 2, -1, -4]), [[-1, -1 , 2 ], [-1, 0, 1]])
+        self.assertListEqual(three_sum([0,1,1]), [])
+        self.assertListEqual(three_sum([0, 0, 0]), [[0, 0, 0]])
+        self.assertListEqual(three_sum([0, 0, 0, 0]), [[0, 0, 0]])
+
 
 if __name__ == '__main__':
     unittest.main()
