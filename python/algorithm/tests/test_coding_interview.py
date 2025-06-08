@@ -9,6 +9,7 @@ from coding_interview import (
     three_sum,
     two_sum,
     valid_parentheses,
+    climb_stairs,
 )
 
 
@@ -110,6 +111,13 @@ class TestCodingInterview(unittest.TestCase):
         self.assertListEqual(three_sum([0,1,1]), [])
         self.assertListEqual(three_sum([0, 0, 0]), [[0, 0, 0]])
         self.assertListEqual(three_sum([0, 0, 0, 0]), [[0, 0, 0]])
+
+    def test_climbing_stairs(self):
+        self.assertEqual(climb_stairs(1), 1)
+        self.assertEqual(climb_stairs(2), 2)
+        self.assertEqual(climb_stairs(3),  3)
+        self.assertEqual(climb_stairs(4),  5)
+        self.assertEqual(climb_stairs(45), 1836311903)
 
 
 if __name__ == '__main__':

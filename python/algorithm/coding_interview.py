@@ -108,6 +108,21 @@ def three_sum(nums: list[int]) -> list[list[int]]:
                     right -= 1
     return rs
 
+# O(N)
+def climb_stairs(n: int, memo: dict = None) -> int:
+    if memo is None:
+        return climb_stairs(n, {})
+    else:
+        if n <= 2:
+            return n
+        else:
+            if n in memo:
+                return memo[n]
+            else:
+                rs = climb_stairs(n - 1, memo) + climb_stairs(n - 2, memo)
+                memo[n] = rs
+                return rs
+        
 
 
 
